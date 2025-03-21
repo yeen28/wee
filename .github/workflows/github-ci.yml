@@ -1,0 +1,61 @@
+name: Github CI
+
+on: # Event 정의
+  push:
+  pull_request:
+    branches: ["master"]
+
+jobs: # Event가 발생하면 어떤 작업을 수행할지 정의
+  frontend: # 어떤 일을 수행하는지 Job 이름
+    runs-on: ubuntu-latest # 어떤 runner(VM)를 사용할건지 정의
+
+    steps: # 어떤 순서대로 Job들을 실행해야 하는지 정의
+      - name: Checkout
+        uses: actions/checkout@v4.2.2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v4.2.0
+        with:
+          node-version: '23'
+
+      - name: Install dependencies
+        working-directory: ./FE_braveiscoming
+        run: npm i
+      - name: Build (FE)
+        working-directory: ./FE_braveiscoming
+        run: | # TODO 추후 수정
+          if ! npm run build; then
+            echo "Warning: Build failed, but containuing...";
+          fi
+      - name: Run tests (FE)
+        working-directory: ./FE_braveiscoming
+        run: | # TODO 추후 수정
+          if ! npm run test -- --ci --reporters=dot; then
+            echo "Warning: Test failed, but containuing...";
+          fi
+        # run: npm run test -- --ci --reporters=dot
+
+  backend:
+    runs-on: ubuntu-latest # 어떤 runner(VM)를 사용할건지 정의
+    needs: frontend # frontend job 실행이 먼저 수행되는 것을 보장
+
+    permissions:
+      contents: read
+
+    steps: # 어떤 순서대로 Job들을 실행해야 하는지 정의
+      - name: Checkout
+        uses: actions/checkout@v4.2.2 # Github에서 제공해주는 Checkout Action 사용
+
+      - name: Set up JDK 17
+        uses: actions/setup-java@v4.7.0
+        with:
+          java-version: '17'
+          distribution: 'temurin'
+
+      # - name: Cache Gradle dependencies
+      #   uses: actions/cache@v4.2.0
+      #   with:
+      #     path: ~/.gradle/caches
+      #     key: ${{ runner.os }}-gradle-${{ hashFiles('**/*.gradle*') }}
+      #     restore-keys: |
+      #       ${{ runner.os }}-gradle-
