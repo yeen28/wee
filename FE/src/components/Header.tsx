@@ -212,20 +212,167 @@ const SettingsButtonContainer = styled.div`
   position: relative;
 `;
 
+const SearchDialog = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: transparent;
+  display: flex;
+  align-items: flex-start;
+  justify-content: center;
+  z-index: 1000;
+  padding-top: 80px;
+`;
+
+const SearchContent = styled(motion.div)`
+  background: white;
+  width: 90%;
+  max-width: 600px;
+  border-radius: 16px;
+  overflow: hidden;
+`;
+
+const SearchHeader = styled.div`
+  padding: 1.5rem;
+  border-bottom: 1px solid #eee;
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+`;
+
+const SearchInput = styled.input`
+  flex: 1;
+  padding: 0.8rem 1rem;
+  border: 1px solid #ddd;
+  border-radius: 8px;
+  font-size: 1rem;
+  outline: none;
+  transition: border-color 0.2s;
+
+  &:focus {
+    border-color: #666;
+  }
+`;
+
+const SearchCloseButton = styled.button`
+  background: none;
+  border: none;
+  font-size: 1.5rem;
+  color: #666;
+  cursor: pointer;
+  padding: 0.5rem;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  &:hover {
+    color: #333;
+  }
+`;
+
+const SearchBody = styled.div`
+  padding: 1.5rem;
+`;
+
+const SearchSection = styled.div`
+  margin-bottom: 2rem;
+
+  &:last-child {
+    margin-bottom: 0;
+  }
+`;
+
+const SearchSectionTitle = styled.h3`
+  font-size: 1rem;
+  font-weight: 600;
+  color: #666;
+  margin-bottom: 1rem;
+`;
+
+const RecentSearches = styled.div`
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+`;
+
+const SearchTag = styled.button`
+  background: #f5f5f5;
+  border: none;
+  padding: 0.5rem 1rem;
+  border-radius: 20px;
+  font-size: 0.9rem;
+  color: #333;
+  cursor: pointer;
+  transition: all 0.2s;
+
+  &:hover {
+    background: #eee;
+  }
+`;
+
+const PopularSearches = styled.div`
+  display: grid;
+  grid-template-columns: repeat(2, 1fr);
+  gap: 1rem;
+`;
+
+const PopularSearchItem = styled.button`
+  display: flex;
+  align-items: center;
+  gap: 0.5rem;
+  padding: 0.8rem;
+  background: #f8f8f8;
+  border: none;
+  border-radius: 8px;
+  cursor: pointer;
+  transition: all 0.2s;
+  text-align: left;
+
+  &:hover {
+    background: #f0f0f0;
+  }
+`;
+
+const SearchRank = styled.span`
+  font-weight: 600;
+  color: #666;
+  min-width: 24px;
+`;
+
+const SearchText = styled.span`
+  color: #333;
+`;
+
+const Backdrop = styled(motion.div)`
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  bottom: 0;
+  background: rgba(0, 0, 0, 0.5);
+  z-index: 999;
+  backdrop-filter: blur(4px);
+`;
+
 const Header: React.FC = () => {
-  const [isNotificationOpen, setIsNotificationOpen] = useState(false);
-  const [isSettingsOpen, setIsSettingsOpen] = useState(false);
+  const [showNotifications, setShowNotifications] = useState(false);
+  const [showSettings, setShowSettings] = useState(false);
+  const [showSearch, setShowSearch] = useState(false);
+  const [searchQuery, setSearchQuery] = useState('');
   const notificationRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
+  const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
       if (notificationRef.current && !notificationRef.current.contains(event.target as Node)) {
-        setIsNotificationOpen(false);
+        setShowNotifications(false);
       }
       if (settingsRef.current && !settingsRef.current.contains(event.target as Node)) {
-        setIsSettingsOpen(false);
+        setShowSettings(false);
       }
     };
 
@@ -233,8 +380,26 @@ const Header: React.FC = () => {
     return () => document.removeEventListener('mousedown', handleClickOutside);
   }, []);
 
+  useEffect(() => {
+    if (showSearch && searchInputRef.current) {
+      searchInputRef.current.focus();
+    }
+  }, [showSearch]);
+
+  useEffect(() => {
+    if (showSearch) {
+      document.body.style.overflow = 'hidden';
+    } else {
+      document.body.style.overflow = 'unset';
+    }
+
+    return () => {
+      document.body.style.overflow = 'unset';
+    };
+  }, [showSearch]);
+
   const handleSettingsClick = (path: string) => {
-    setIsSettingsOpen(false);
+    setShowSettings(false);
     if (path === '/logout') {
       // 로그아웃 처리
       console.log('Logging out...');
@@ -313,6 +478,35 @@ const Header: React.FC = () => {
     }
   ];
 
+  const recentSearches = [
+    'BTS',
+    'NewJeans',
+    'SEVENTEEN',
+    'TXT',
+    'LE SSERAFIM'
+  ];
+
+  const popularSearches = [
+    { rank: 1, text: 'BTS' },
+    { rank: 2, text: 'NewJeans' },
+    { rank: 3, text: 'SEVENTEEN' },
+    { rank: 4, text: 'TXT' }
+  ];
+
+  const handleSearch = (query: string) => {
+    setSearchQuery(query);
+    // 여기에 검색 로직 추가
+    console.log('Searching for:', query);
+  };
+
+  const handleSearchSubmit = (e: React.FormEvent) => {
+    e.preventDefault();
+    if (searchQuery.trim()) {
+      handleSearch(searchQuery);
+      setShowSearch(false);
+    }
+  };
+
   return (
     <HeaderContainer>
       <HeaderContent>
@@ -321,6 +515,7 @@ const Header: React.FC = () => {
           <IconButton
             whileHover={{ scale: 1.05 }}
             whileTap={{ scale: 0.95 }}
+            onClick={() => setShowSearch(true)}
           >
             <svg viewBox="0 0 24 24" width="24" height="24">
               <path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
@@ -330,7 +525,7 @@ const Header: React.FC = () => {
             <IconButton
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setIsNotificationOpen(!isNotificationOpen)}
+              onClick={() => setShowNotifications(!showNotifications)}
             >
               <svg viewBox="0 0 24 24" width="24" height="24">
                 <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
@@ -338,7 +533,7 @@ const Header: React.FC = () => {
               <NotificationBadge>3</NotificationBadge>
             </IconButton>
             <AnimatePresence>
-              {isNotificationOpen && (
+              {showNotifications && (
                 <NotificationDialog
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -349,7 +544,7 @@ const Header: React.FC = () => {
                     <NotificationDialogTitle>알림</NotificationDialogTitle>
                     <IconButton
                       whileHover={{ scale: 1.1 }}
-                      onClick={() => setIsNotificationOpen(false)}
+                      onClick={() => setShowNotifications(false)}
                     >
                       <svg viewBox="0 0 24 24" width="20" height="20">
                         <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -378,14 +573,14 @@ const Header: React.FC = () => {
             <IconButton
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setIsSettingsOpen(!isSettingsOpen)}
+              onClick={() => setShowSettings(!showSettings)}
             >
               <svg viewBox="0 0 24 24" width="24" height="24">
                 <path fill="currentColor" d="M19.14 12.94c.04-.3.06-.61.06-.94 0-.32-.02-.64-.07-.94l2.03-1.58c.18-.14.23-.41.12-.61l-1.92-3.32c-.12-.22-.37-.29-.59-.22l-2.39.96c-.5-.38-1.03-.7-1.62-.94l-.36-2.54c-.04-.24-.24-.41-.48-.41h-3.84c-.24 0-.43.17-.47.41l-.36 2.54c-.59.24-1.13.57-1.62.94l-2.39-.96c-.22-.08-.47 0-.59.22L2.74 8.87c-.12.21-.08.47.12.61l2.03 1.58c-.05.3-.07.63-.07.94s.02.64.07.94l-2.03 1.58c-.18.14-.23.41-.12.61l1.92 3.32c.12.22.37.29.59.22l2.39-.96c.5.38 1.03.7 1.62.94l.36 2.54c.05.24.24.41.48.41h3.84c.24 0 .44-.17.47-.41l.36-2.54c.59-.24 1.13-.56 1.62-.94l2.39.96c.22.08.47 0 .59-.22l1.92-3.32c.12-.22.07-.47-.12-.61l-2.01-1.58zM12 15.6c-1.98 0-3.6-1.62-3.6-3.6s1.62-3.6 3.6-3.6 3.6 1.62 3.6 3.6-1.62 3.6-3.6 3.6z"/>
               </svg>
             </IconButton>
             <AnimatePresence>
-              {isSettingsOpen && (
+              {showSettings && (
                 <SettingsDialog
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -396,7 +591,7 @@ const Header: React.FC = () => {
                     <SettingsTitle>설정</SettingsTitle>
                     <IconButton
                       whileHover={{ scale: 1.1 }}
-                      onClick={() => setIsSettingsOpen(false)}
+                      onClick={() => setShowSettings(false)}
                     >
                       <svg viewBox="0 0 24 24" width="20" height="20">
                         <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
@@ -435,6 +630,68 @@ const Header: React.FC = () => {
           </IconButton>
         </Nav>
       </HeaderContent>
+
+      <AnimatePresence>
+        {showSearch && (
+          <>
+            <Backdrop
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowSearch(false)}
+            />
+            <SearchDialog
+              initial={{ opacity: 0 }}
+              animate={{ opacity: 1 }}
+              exit={{ opacity: 0 }}
+              onClick={() => setShowSearch(false)}
+            >
+              <SearchContent
+                initial={{ scale: 0.95, opacity: 0 }}
+                animate={{ scale: 1, opacity: 1 }}
+                exit={{ scale: 0.95, opacity: 0 }}
+                onClick={e => e.stopPropagation()}
+              >
+                <SearchHeader>
+                  <form onSubmit={handleSearchSubmit} style={{ flex: 1 }}>
+                    <SearchInput
+                      ref={searchInputRef}
+                      type="text"
+                      placeholder="검색어를 입력하세요"
+                      value={searchQuery}
+                      onChange={(e) => setSearchQuery(e.target.value)}
+                    />
+                  </form>
+                  <SearchCloseButton onClick={() => setShowSearch(false)}>×</SearchCloseButton>
+                </SearchHeader>
+                <SearchBody>
+                  <SearchSection>
+                    <SearchSectionTitle>최근 검색어</SearchSectionTitle>
+                    <RecentSearches>
+                      {recentSearches.map((search, index) => (
+                        <SearchTag key={index} onClick={() => handleSearch(search)}>
+                          {search}
+                        </SearchTag>
+                      ))}
+                    </RecentSearches>
+                  </SearchSection>
+                  <SearchSection>
+                    <SearchSectionTitle>인기 검색어</SearchSectionTitle>
+                    <PopularSearches>
+                      {popularSearches.map((search) => (
+                        <PopularSearchItem key={search.rank} onClick={() => handleSearch(search.text)}>
+                          <SearchRank>{search.rank}</SearchRank>
+                          <SearchText>{search.text}</SearchText>
+                        </PopularSearchItem>
+                      ))}
+                    </PopularSearches>
+                  </SearchSection>
+                </SearchBody>
+              </SearchContent>
+            </SearchDialog>
+          </>
+        )}
+      </AnimatePresence>
     </HeaderContainer>
   );
 };
