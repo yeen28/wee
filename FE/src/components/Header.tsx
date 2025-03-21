@@ -28,6 +28,11 @@ const Logo = styled.div`
   font-weight: 700;
   color: #333;
   cursor: pointer;
+  transition: color 0.2s;
+
+  &:hover {
+    color: #666;
+  }
 `;
 
 const Nav = styled.nav`
@@ -311,7 +316,7 @@ const Header: React.FC = () => {
   return (
     <HeaderContainer>
       <HeaderContent>
-        <Logo>Weverse</Logo>
+        <Logo onClick={() => navigate('/')}>Weverse</Logo>
         <Nav>
           <IconButton
             whileHover={{ scale: 1.05 }}

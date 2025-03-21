@@ -5,10 +5,10 @@ import Hero from './components/Hero';
 import Artists from './components/Artists';
 import Features from './components/Features';
 import Footer from './components/Footer';
+import AccountSettings from './pages/AccountSettings';
 import './App.css';
 
 // 임시 설정 페이지 컴포넌트들
-const AccountSettings = () => <div>계정 설정 페이지</div>;
 const NotificationSettings = () => <div>알림 설정 페이지</div>;
 const LanguageSettings = () => <div>언어 설정 페이지</div>;
 const ThemeSettings = () => <div>테마 설정 페이지</div>;
