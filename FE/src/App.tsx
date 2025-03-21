@@ -1,11 +1,13 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
+import styled from 'styled-components';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Artists from './components/Artists';
 import Features from './components/Features';
 import Footer from './components/Footer';
 import AccountSettings from './pages/AccountSettings';
+import DMButtonComponent from './components/DMButton';
 import './App.css';
 
 // 임시 설정 페이지 컴포넌트들
@@ -24,10 +26,15 @@ const Home = () => (
   </>
 );
 
-function App() {
+const AppContainer = styled.div`
+  min-height: 100vh;
+  background-color: white;
+`;
+
+const App: React.FC = () => {
   return (
     <Router>
-      <div className="App">
+      <AppContainer>
         <Header />
         <main>
           <Routes>
@@ -42,9 +49,10 @@ function App() {
           </Routes>
         </main>
         <Footer />
-      </div>
+        <DMButtonComponent />
+      </AppContainer>
     </Router>
   );
-}
+};
 
 export default App;
