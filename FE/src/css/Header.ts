@@ -64,18 +64,6 @@ export const NotificationBadge = styled.div`
   text-align: center;
 `;
 
-export const NotificationDialog = styled(motion.div)`
-  position: absolute;
-  top: 100%;
-  right: -2rem;
-  width: 320px;
-  background: white;
-  border-radius: 12px;
-  box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
-  margin-top: 0.5rem;
-  overflow: hidden;
-`;
-
 export const NotificationHeader = styled.div`
   padding: 1rem;
   border-bottom: 1px solid #eee;
@@ -88,11 +76,6 @@ export const NotificationDialogTitle = styled.h3`
   font-size: 1rem;
   font-weight: 600;
   color: #333;
-`;
-
-export const NotificationList = styled.div`
-  max-height: 400px;
-  overflow-y: auto;
 `;
 
 export const NotificationItem = styled.div`

@@ -18,7 +18,6 @@ public class NotificationsController {
 	@Operation(summary = "Get notifications")
 	@GetMapping("/notifications")
 	public ResponseEntity<List<NotificationDTO>> getNotifications() {
-		List<NotificationDTO> notifications = notificationService.getNotifications();
-		return ResponseEntity.ok(notifications);
+		return ResponseEntity.ok(notificationService.getNotifications());
 	}
 } 

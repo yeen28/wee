@@ -2,18 +2,30 @@ import React, { useState, useRef, useEffect } from 'react';
 import { AnimatePresence } from 'framer-motion';
 import { useNavigate } from 'react-router-dom';
 import getNotifications from '../common/api/notification/getNotifications';
-import {HeaderContainer, HeaderContent, Logo, Nav, IconButton, NotificationButtonContainer, NotificationBadge, NotificationDialog, NotificationHeader, NotificationDialogTitle, NotificationList, NotificationItem, NotificationContent, NotificationImage, NotificationText, NotificationTitle, NotificationMessage, NotificationTime, SettingsDialog, SettingsHeader, SettingsTitle, SettingsList, SettingsItem, SettingsItemContent, SettingsItemTitle, SettingsItemIcon, SettingsButtonContainer, SearchDialog, SearchContent, SearchHeader, SearchInput, SearchCloseButton, SearchBody, SearchSection, SearchSectionTitle, RecentSearches, SearchTag, PopularSearches, PopularSearchItem, SearchRank, SearchText, Backdrop} from '../css/Header.ts';
+import {HeaderContainer, HeaderContent, Logo, Nav, IconButton, NotificationButtonContainer, NotificationBadge, SettingsDialog, SettingsHeader, SettingsTitle, SettingsList, SettingsItem, SettingsItemContent, SettingsItemTitle, SettingsItemIcon, SettingsButtonContainer, SearchDialog, SearchContent, SearchHeader, SearchInput, SearchCloseButton, SearchBody, SearchSection, SearchSectionTitle, RecentSearches, SearchTag, PopularSearches, PopularSearchItem, SearchRank, SearchText, Backdrop} from '../css/Header.ts';
 import { settingsItems } from '../common/mock/HeaderSettingsItems';
+import { NotificationDTO } from '../models/NotificationDTO.ts';
+import NotificationDialog from './notification/NotificationDialog.tsx';
 
 const Header: React.FC = () => {
   const [showNotifications, setShowNotifications] = useState(false);
   const [showSettings, setShowSettings] = useState(false);
   const [showSearch, setShowSearch] = useState(false);
   const [searchQuery, setSearchQuery] = useState('');
+  const [notifications, setNotifications] = useState<NotificationDTO[]>([]);
   const notificationRef = useRef<HTMLDivElement>(null);
   const settingsRef = useRef<HTMLDivElement>(null);
   const searchInputRef = useRef<HTMLInputElement>(null);
   const navigate = useNavigate();
+
+  useEffect(() => {
+    fetchNotifications(); // Fetch notifications immediately on component mount
+    const fetchNotificationsInterval = setInterval(() => {
+      fetchNotifications();
+    }, 5000);
+
+    return () => clearInterval(fetchNotificationsInterval);
+  }, []);
 
   useEffect(() => {
     const handleClickOutside = (event: MouseEvent) => {
@@ -58,30 +70,6 @@ const Header: React.FC = () => {
     }
   };
 
-  const notifications = [
-    {
-      id: 1,
-      title: 'BTS',
-      message: '새로운 포스트가 업로드되었습니다.',
-      time: '10분 전',
-      image: 'https://via.placeholder.com/48'
-    },
-    {
-      id: 2,
-      title: 'SEVENTEEN',
-      message: '라이브 스트리밍이 시작되었습니다.',
-      time: '1시간 전',
-      image: 'https://via.placeholder.com/48'
-    },
-    {
-      id: 3,
-      title: 'LE SSERAFIM',
-      message: '새로운 콘텐츠가 추가되었습니다.',
-      time: '2시간 전',
-      image: 'https://via.placeholder.com/48'
-    }
-  ];
-
   const recentSearches = [
     'BTS',
     'NewJeans',
@@ -111,6 +99,17 @@ const Header: React.FC = () => {
     }
   };
 
+  const fetchNotifications = async () => {
+    setNotifications(await getNotifications());
+  };
+
+  const clickNotificationButton = () => {
+    setShowNotifications(!showNotifications);
+    fetchNotifications();
+
+    // TODO 알림 배지 개수 초기화
+  }
+
   return (
     <HeaderContainer>
       <HeaderContent>
@@ -125,54 +124,32 @@ const Header: React.FC = () => {
               <path fill="currentColor" d="M15.5 14h-.79l-.28-.27C15.41 12.59 16 11.11 16 9.5 16 5.91 13.09 3 9.5 3S3 5.91 3 9.5 5.91 16 9.5 16c1.61 0 3.09-.59 4.23-1.57l.27.28v.79l5 4.99L20.49 19l-4.99-5zm-6 0C7.01 14 5 11.99 5 9.5S7.01 5 9.5 5 14 7.01 14 9.5 11.99 14 9.5 14z"/>
             </svg>
           </IconButton>
+
           <NotificationButtonContainer ref={notificationRef}>
             <IconButton
               whileHover={{ scale: 1.05 }}
               whileTap={{ scale: 0.95 }}
-              onClick={() => setShowNotifications(!showNotifications)}
+              onClick={() => clickNotificationButton()}
             >
               <svg viewBox="0 0 24 24" width="24" height="24">
                 <path fill="currentColor" d="M12 22c1.1 0 2-.9 2-2h-4c0 1.1.9 2 2 2zm6-6v-5c0-3.07-1.63-5.64-4.5-6.32V4c0-.83-.67-1.5-1.5-1.5s-1.5.67-1.5 1.5v.68C7.64 5.36 6 7.92 6 11v5l-2 2v1h16v-1l-2-2zm-2 1H8v-6c0-2.48 1.51-4.5 4-4.5s4 2.02 4 4.5v6z"/>
               </svg>
-              <NotificationBadge>3</NotificationBadge>
+              <NotificationBadge>{notifications.length}</NotificationBadge>
             </IconButton>
             <AnimatePresence>
               {showNotifications && (
                 <NotificationDialog
+                  notifications={notifications}
+                  setShowNotifications={setShowNotifications}
                   initial={{ opacity: 0, y: -10 }}
                   animate={{ opacity: 1, y: 0 }}
                   exit={{ opacity: 0, y: -10 }}
                   transition={{ duration: 0.2 }}
-                >
-                  <NotificationHeader>
-                    <NotificationDialogTitle>알림</NotificationDialogTitle>
-                    <IconButton
-                      whileHover={{ scale: 1.1 }}
-                      onClick={() => setShowNotifications(false)}
-                    >
-                      <svg viewBox="0 0 24 24" width="20" height="20">
-                        <path fill="currentColor" d="M19 6.41L17.59 5 12 10.59 6.41 5 5 6.41 10.59 12 5 17.59 6.41 19 12 13.41 17.59 19 19 17.59 13.41 12z"/>
-                      </svg>
-                    </IconButton>
-                  </NotificationHeader>
-                  <NotificationList>
-                    {notifications.map((notification) => (
-                      <NotificationItem key={notification.id}>
-                        <NotificationContent>
-                          <NotificationImage src={notification.image} alt={notification.title} />
-                          <NotificationText>
-                            <NotificationTitle>{notification.title}</NotificationTitle>
-                            <NotificationMessage>{notification.message}</NotificationMessage>
-                            <NotificationTime>{notification.time}</NotificationTime>
-                          </NotificationText>
-                        </NotificationContent>
-                      </NotificationItem>
-                    ))}
-                  </NotificationList>
-                </NotificationDialog>
+                />
               )}
             </AnimatePresence>
           </NotificationButtonContainer>
+
           <SettingsButtonContainer ref={settingsRef}>
             <IconButton
               whileHover={{ scale: 1.05 }}
