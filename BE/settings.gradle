@@ -1,0 +1,5 @@
+rootProject.name = 'whoisthere'
+include 'common'
+include 'chat'
+include 'auth'
+include 'api'
