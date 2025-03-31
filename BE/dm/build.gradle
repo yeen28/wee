@@ -19,7 +19,6 @@ repositories {
 
 dependencies {
     implementation project(':common') // common 모듈에 의존성 추가
-    implementation project(':dm')
 
     compileOnly 'org.projectlombok:lombok:1.18.22'  // 컴파일 전용
     annotationProcessor 'org.projectlombok:lombok:1.18.22'  // 어노테이션 프로세서
@@ -29,12 +28,10 @@ dependencies {
     // implementation 'org.springframework.boot:spring-boot-starter-security' // 보안 관련 스타터
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
 
-    // JWT 인증을 위한 라이브러리
-//    implementation 'io.jsonwebtoken:jjwt:0.11.5' // JWT
     //swagger
     implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-//    //liquibase
-//    implementation 'org.liquibase:liquibase-core'
+    //liquibase
+    implementation 'org.liquibase:liquibase-core'
 
     // 테스트 라이브러리
     testImplementation 'org.springframework.boot:spring-boot-starter-test' // Spring Boot 테스트 관련 라이브러리
@@ -46,4 +43,12 @@ tasks.withType(JavaCompile).configureEach {
 
 tasks.named('test') {
     useJUnitPlatform()
+}
+
+tasks.bootJar {
+    enabled = false
+}
+
+tasks.jar {
+    enabled = true
 }

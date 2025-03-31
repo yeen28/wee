@@ -1,6 +1,5 @@
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import styled from 'styled-components';
 import Header from './components/Header';
 import Hero from './components/Hero';
 import Artists from './components/Artists';
@@ -10,7 +9,7 @@ import AccountSettings from './pages/AccountSettings';
 import DMButtonComponent from './components/DMButton';
 import './App.css';
 
-// 임시 설정 페이지 컴포넌트들
+// TODO 임시 설정 페이지 컴포넌트들
 const NotificationSettings = () => <div>알림 설정 페이지</div>;
 const LanguageSettings = () => <div>언어 설정 페이지</div>;
 const ThemeSettings = () => <div>테마 설정 페이지</div>;
@@ -26,15 +25,10 @@ const Home = () => (
   </>
 );
 
-const AppContainer = styled.div`
-  min-height: 100vh;
-  background-color: white;
-`;
-
 const App: React.FC = () => {
   return (
     <Router>
-      <AppContainer>
+      <div style={{ minHeight: '100vh', backgroundColor: 'white' }}>
         <Header />
         <main>
           <Routes>
@@ -50,7 +44,7 @@ const App: React.FC = () => {
         </main>
         <Footer />
         <DMButtonComponent />
-      </AppContainer>
+      </div>
     </Router>
   );
 };
