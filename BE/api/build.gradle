@@ -4,9 +4,6 @@ plugins {
     id 'io.spring.dependency-management' // 의존성 관리 플러그인
 }
 
-group = 'com.whoisthere'
-version = '0.0.1-SNAPSHOT'
-
 configurations {
     compileOnly {
         extendsFrom annotationProcessor
@@ -21,23 +18,14 @@ dependencies {
     implementation project(':common') // common 모듈에 의존성 추가
     implementation project(':dm')
 
-    compileOnly 'org.projectlombok:lombok:1.18.22'  // 컴파일 전용
-    annotationProcessor 'org.projectlombok:lombok:1.18.22'  // 어노테이션 프로세서
+    compileOnly 'org.projectlombok:lombok:1.18.30'
+    annotationProcessor 'org.projectlombok:lombok:1.18.30'
 
-    // Spring Boot 웹 관련 라이브러리
-    implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 스타터 (REST API)
-    // implementation 'org.springframework.boot:spring-boot-starter-security' // 보안 관련 스타터
-    implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
-
-    // JWT 인증을 위한 라이브러리
-//    implementation 'io.jsonwebtoken:jjwt:0.11.5' // JWT
-    //swagger
-    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.0.2'
-//    //liquibase
-//    implementation 'org.liquibase:liquibase-core'
-
-    // 테스트 라이브러리
-    testImplementation 'org.springframework.boot:spring-boot-starter-test' // Spring Boot 테스트 관련 라이브러리
+    implementation 'org.springframework.boot:spring-boot-starter-web'
+    implementation 'org.springframework.boot:spring-boot-starter-data-jpa'
+    implementation 'org.springdoc:springdoc-openapi-starter-webmvc-ui:2.3.0'
+    
+    testImplementation 'org.springframework.boot:spring-boot-starter-test'
 }
 
 tasks.withType(JavaCompile).configureEach {

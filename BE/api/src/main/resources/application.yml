@@ -1,0 +1,10 @@
+spring:
+  config:
+    import: optional:classpath:/override.yml
+  liquibase:
+    enabled: true
+    change-log: classpath:db/changelog/db.changelog-master.xml
+    default-schema: braveiscoming
+    user: ${spring.datasource.username}
+    password: ${spring.datasource.password}
+    url: ${spring.datasource.url} 

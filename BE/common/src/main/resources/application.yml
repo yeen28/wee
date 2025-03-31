@@ -5,10 +5,6 @@ spring:
     username: ${DB_USERNAME:root}
     password: ${DB_PASSWORD:}
 
-#    sql:
-#      init:
-#        mode: never # always
-
     jpa:
       hibernate:
         ddl-auto: none # create

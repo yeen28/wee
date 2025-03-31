@@ -1,0 +1,57 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<databaseChangeLog
+        xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
+        xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+        xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd">
+
+    <changeSet id="2" author="dm-setup">
+        <!-- DM Room 테이블 생성 -->
+        <createTable tableName="dm_room">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="updated_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="dm_room" columnName="id" columnDataType="int"/>
+        <addDefaultValue tableName="dm_room" columnName="created_at" defaultValueDate="CURRENT_TIMESTAMP"/>
+        <addDefaultValue tableName="dm_room" columnName="updated_at" defaultValueDate="CURRENT_TIMESTAMP"/>
+
+        <!-- DM Message 테이블 생성 -->
+        <createTable tableName="dm_message">
+            <column name="id" type="int">
+                <constraints primaryKey="true" nullable="false"/>
+            </column>
+            <column name="room_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="sender_id" type="int">
+                <constraints nullable="false"/>
+            </column>
+            <column name="content" type="text">
+                <constraints nullable="false"/>
+            </column>
+            <column name="created_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+        </createTable>
+        <addAutoIncrement tableName="dm_message" columnName="id" columnDataType="int"/>
+        <addDefaultValue tableName="dm_message" columnName="created_at" defaultValueDate="CURRENT_TIMESTAMP"/>
+        
+        <!-- Foreign Key 추가 -->
+        <addForeignKeyConstraint baseTableName="dm_message"
+                                baseColumnNames="room_id"
+                                constraintName="fk_message_room"
+                                referencedTableName="dm_room"
+                                referencedColumnNames="id"/>
+        <addForeignKeyConstraint baseTableName="dm_message"
+                                baseColumnNames="sender_id"
+                                constraintName="fk_message_user"
+                                referencedTableName="user_info"
+                                referencedColumnNames="id"/>
+    </changeSet>
+</databaseChangeLog> 

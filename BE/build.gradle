@@ -5,6 +5,16 @@ plugins {
 }
 
 allprojects {
+	group = 'com.whoisthere'
+	version = '0.0.1-SNAPSHOT'
+	
+	apply plugin: 'java'
+	
+	java {
+		sourceCompatibility = '17'
+		targetCompatibility = '17'
+	}
+	
 	repositories {
 		mavenCentral()
 	}
