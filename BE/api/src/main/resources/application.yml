@@ -1,10 +1,11 @@
 spring:
+  datasource:
+    url: jdbc:mariadb://${DB_HOST:127.0.0.1}:${DB_PORT:3306}/wee
   config:
-    import: optional:classpath:/override.yml
+    import:
+      - classpath:/application.yml     # application.yml을 먼저 로드
+      - optional:classpath:/override.yml        # 그다음 override.yml 로드
   liquibase:
     enabled: true
     change-log: classpath:db/changelog/db.changelog-master.xml
-    default-schema: braveiscoming
-    user: ${spring.datasource.username}
-    password: ${spring.datasource.password}
-    url: ${spring.datasource.url} 
+    default-schema: wee
