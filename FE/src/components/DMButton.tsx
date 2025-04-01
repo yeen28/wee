@@ -3,7 +3,7 @@ import styled from 'styled-components';
 import { motion, AnimatePresence } from 'framer-motion';
 import ChatRoom from './dm/ChatRoom';
 import ChatHeader from './dm/ChatHeader';
-import getDmMessage from '../common/api/dm/getDMMessage';
+import getDmMessage from '../common/api/dm/getDmMessage';
 import { DmDTO } from '../models/DmDTO';
 
 const DMButtonContainer = styled(motion.div)`
