@@ -189,10 +189,10 @@ const DMButtonComponent: React.FC = () => {
 
   const clickDMButton = () => {
     // setShowChat(!showChat);
-    getDmMessage().then((messages) => {
-      setChatRooms(messages);
-      console.log(messages);
-    });
+    getDmMessage()
+      .then(data => {
+        setChatRooms(data);
+      });
   };
 
   return (

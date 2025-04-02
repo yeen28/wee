@@ -9,7 +9,7 @@ import org.springframework.web.bind.annotation.*;
 import java.util.List;
 
 @RestController
-@RequestMapping("/api/dm")
+@RequestMapping("/dm")
 @RequiredArgsConstructor
 public class DmController {
 	private final DmService dmService;
