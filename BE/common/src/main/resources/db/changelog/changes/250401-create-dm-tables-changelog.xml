@@ -23,35 +23,29 @@
 
         <!-- DM Message 테이블 생성 -->
         <createTable tableName="dm_message">
-            <column name="id" type="int">
+            <column name="id" type="bigint">
                 <constraints primaryKey="true" nullable="false"/>
             </column>
-            <column name="room_id" type="int">
+            <column name="sender_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
-            <column name="sender_id" type="int">
+            <column name="receiver_id" type="varchar(50)">
                 <constraints nullable="false"/>
             </column>
             <column name="content" type="text">
                 <constraints nullable="false"/>
             </column>
-            <column name="created_at" type="TIMESTAMP">
+            <column name="sent_at" type="TIMESTAMP">
+                <constraints nullable="false"/>
+            </column>
+            <column name="is_read" type="boolean" defaultValueBoolean="false">
+                <constraints nullable="false"/>
+            </column>
+            <column name="version" type="bigint" defaultValueNumeric="0">
                 <constraints nullable="false"/>
             </column>
         </createTable>
-        <addAutoIncrement tableName="dm_message" columnName="id" columnDataType="int"/>
-        <addDefaultValue tableName="dm_message" columnName="created_at" defaultValueDate="CURRENT_TIMESTAMP"/>
-        
-        <!-- Foreign Key 추가 -->
-        <addForeignKeyConstraint baseTableName="dm_message"
-                                baseColumnNames="room_id"
-                                constraintName="fk_message_room"
-                                referencedTableName="dm_room"
-                                referencedColumnNames="id"/>
-        <addForeignKeyConstraint baseTableName="dm_message"
-                                baseColumnNames="sender_id"
-                                constraintName="fk_message_user"
-                                referencedTableName="user_info"
-                                referencedColumnNames="id"/>
+        <addAutoIncrement tableName="dm_message" columnName="id" columnDataType="bigint"/>
+        <addDefaultValue tableName="dm_message" columnName="sent_at" defaultValueDate="CURRENT_TIMESTAMP"/>
     </changeSet>
 </databaseChangeLog> 

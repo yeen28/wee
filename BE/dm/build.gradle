@@ -13,8 +13,8 @@ configurations {
 dependencies {
     implementation project(':common')
     
-    compileOnly 'org.projectlombok:lombok:1.18.30' // 컴파일 전용
-    annotationProcessor 'org.projectlombok:lombok:1.18.30' // 어노테이션 프로세서
+    compileOnly 'org.projectlombok:lombok' // 컴파일 전용
+    annotationProcessor 'org.projectlombok:lombok' // 어노테이션 프로세서
     
     implementation 'org.springframework.boot:spring-boot-starter-web' // 웹 스타터 (REST API)
     implementation 'org.springframework.boot:spring-boot-starter-data-jpa' // JPA
