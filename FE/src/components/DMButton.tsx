@@ -195,6 +195,11 @@ const DMButtonComponent: React.FC = () => {
       });
   };
 
+  const handleClose = () => {
+    setShowChat(false);
+    setSelectedRoom(null);
+  };
+
   return (
     <DMButtonContainer onClick={clickDMButton}>
       <DMButton
@@ -218,7 +223,7 @@ const DMButtonComponent: React.FC = () => {
               <ChatRoom selectedRoom={selectedRoom} setSelectedRoom={setSelectedRoom} />
             ) : (
               <>
-                <ChatHeader />
+                <ChatHeader onClose={handleClose} />
                 <ChatListContainer>
                   <ChatList>
                     {chatRooms.map((room) => (

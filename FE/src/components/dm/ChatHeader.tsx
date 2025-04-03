@@ -1,4 +1,8 @@
-export default function ChatHeader() {
+interface ChatHeaderProps {
+    onClose: () => void;
+}
+
+export default function ChatHeader({ onClose }: ChatHeaderProps) {
     return (
         <div
             style={{
@@ -27,7 +31,10 @@ export default function ChatHeader() {
             }}
                 onMouseEnter={(e) => e.currentTarget.style.color = '#333'}
                 onMouseLeave={(e) => e.currentTarget.style.color = '#666'}
-                onClick={() => window.dispatchEvent(new CustomEvent('setShowChat', { detail: false }))}>×</button>
+                onClick={onClose}
+            >
+                ×
+            </button>
         </div>
     )
 }
