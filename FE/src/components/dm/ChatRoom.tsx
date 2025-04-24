@@ -56,7 +56,7 @@ const ChatMessages = styled.div`
   gap: 1rem;
 `;
 
-export default function ChatRoom({ selectedRoom, setSelectedRoom }: { selectedRoom: DmDTO, setSelectedRoom: (room: DmDTO) => void }) {
+export default function ChatRoom({ selectedRoom, setSelectedRoom }: { selectedRoom: DmDTO, setSelectedRoom: (room: DmDTO | null) => void }) {
     const [message, setMessage] = useState('');
     const messagesEndRef = useRef<HTMLDivElement>(null);
 
